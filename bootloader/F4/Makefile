@@ -25,7 +25,16 @@ endif
 # target
 ######################################
 TARGET = hid_bootloader
+# STM32F407xx
+# DEVICE = STM32F407xx
+# LDSCRIPT = STM32F407VETx_FLASH.ld
+# ASM_SOURCES = startup_stm32f407xx.s
 
+# STM32F401CC
+DEVICE = STM32F401xC
+C_DEFS_EXTRA = -DIGNORE_BOOT1_PIN
+LDSCRIPT = STM32F401CC_FLASH.ld
+ASM_SOURCES = startup_stm32f401xc.s
 
 ######################################
 # building variables
@@ -77,11 +86,6 @@ Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src/usbd_customhid.c  
 
-# ASM sources
-ASM_SOURCES =  \
-startup_stm32f407xx.s
-
-
 #######################################
 # binaries
 #######################################
@@ -122,10 +126,11 @@ MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 # AS defines
 AS_DEFS = 
 
-# C defines
+# C defines F401
 C_DEFS =  \
 -DUSE_HAL_DRIVER \
--DSTM32F407xx
+-D$(DEVICE)
+C_DEFS += $(C_DEFS_EXTRA)
 
 
 # AS includes
@@ -159,8 +164,11 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 #######################################
 # LDFLAGS
 #######################################
-# link script
-LDSCRIPT = STM32F407VETx_FLASH.ld
+# link script F407
+# LDSCRIPT = STM32F407VETx_FLASH.ld
+
+# link script F401
+LDSCRIPT = STM32F401CC_FLASH.ld
 
 # libraries
 LIBS = -lc -lm -lnosys 
